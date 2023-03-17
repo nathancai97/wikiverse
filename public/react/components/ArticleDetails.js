@@ -5,10 +5,6 @@ import apiURL from "../api";
 export const ArticleDetails = ({ article, setSelectedArticle, user }) => {
   const { title, content, tags, createdAt, authorId } = article;
 
-
-
-
-
   return (
     <>
       <h1>{title}</h1>

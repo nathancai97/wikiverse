@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PagesList } from "./PagesList";
 import { ArticleDetails } from "./ArticleDetails";
+import { Form } from "./Form";
 
 // import and prepend the api url to any fetch calls
 import apiURL from "../api";
@@ -10,6 +11,7 @@ export const App = () => {
   const [article, setArticle] = useState();
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [user, setUser] = useState();
+  const [isAddingArticle, setIsAddingArticle] = useState(false);
 
   async function fetchPages() {
     try {
@@ -23,7 +25,7 @@ export const App = () => {
 
   useEffect(() => {
     fetchPages();
-  }, []);
+  }, [<Form />]);
 
   async function handlePageClick(slug) {
     try {
@@ -38,29 +40,35 @@ export const App = () => {
     }
   }
 
-  const findUser = async(authorId) => {
+  const findUser = async (authorId) => {
     const res = await fetch(`${apiURL}/users/${authorId}`);
     const author = await res.json();
     setUser(author.name);
-  }
+  };
 
-
+  const addBtnOnClick = () => {
+    setIsAddingArticle(!isAddingArticle);
+  };
 
   return (
     <main>
       <h1>WikiVerse</h1>
-      <h2>An interesting 📚</h2>
       {selectedArticle ? (
         <ArticleDetails
           article={article}
           setSelectedArticle={setSelectedArticle}
           user={user}
         />
-      ) : (
+      ) : !isAddingArticle ? (
         <>
+          <h2>An interesting 📚</h2>
           <h3>Click on a book for more info!</h3>
           <PagesList pages={pages} handlePageClick={handlePageClick} />
+          <br />
+          <button onClick={addBtnOnClick}>Add A Book!</button>
         </>
+      ) : (
+        <Form addBtnOnClick={addBtnOnClick}/>
       )}
     </main>
   );
