@@ -12,6 +12,7 @@ export const App = () => {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [user, setUser] = useState();
   const [isAddingArticle, setIsAddingArticle] = useState(false);
+  
 
   async function fetchPages() {
     try {
@@ -25,7 +26,7 @@ export const App = () => {
 
   useEffect(() => {
     fetchPages();
-  }, [<Form />]);
+  }, [isAddingArticle, selectedArticle]);
 
   async function handlePageClick(slug) {
     try {
@@ -34,7 +35,6 @@ export const App = () => {
       setArticle(articleData);
       setSelectedArticle(slug);
       findUser(articleData.authorId);
-      // console.log(user);
     } catch (err) {
       console.error(err);
     }
