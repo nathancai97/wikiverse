@@ -7,8 +7,9 @@ import apiURL from "../api";
 
 export const App = () => {
   const [pages, setPages] = useState([]);
-  const [article, setArticle] = useState([]);
+  const [article, setArticle] = useState();
   const [selectedArticle, setSelectedArticle] = useState(null);
+  const [user, setUser] = useState();
 
   async function fetchPages() {
     try {
@@ -25,17 +26,25 @@ export const App = () => {
   }, []);
 
   async function handlePageClick(slug) {
-    console.log("Clicked page:", slug);
     try {
       const response = await fetch(`${apiURL}/wiki/${slug}`);
       const articleData = await response.json();
       setArticle(articleData);
       setSelectedArticle(slug);
-      console.log("Selected article:", slug);
+      findUser(articleData.authorId);
+      // console.log(user);
     } catch (err) {
       console.error(err);
     }
   }
+
+  const findUser = async(authorId) => {
+    const res = await fetch(`${apiURL}/users/${authorId}`);
+    const author = await res.json();
+    setUser(author.name);
+  }
+
+
 
   return (
     <main>
@@ -45,6 +54,7 @@ export const App = () => {
         <ArticleDetails
           article={article}
           setSelectedArticle={setSelectedArticle}
+          user={user}
         />
       ) : (
         <>
